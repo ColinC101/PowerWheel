@@ -11,7 +11,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this library. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -24,9 +24,10 @@
 #include "HidReportDescriptor.h"
 #include "PidReportDescriptor.h"
 
-#define BUTTON_COUNT 20 
+#define REPORT_ID 1
+#define BUTTON_COUNT 20
 #define BUTTON_BYTE_COUNT 3
-#define HATSWITCH_COUNT 1 
+#define HATSWITCH_COUNT 1
 #define AXIS_COUNT 6
 
 
@@ -34,12 +35,13 @@ class PowerWheel
 {
 public:
 	PowerWheel();
-	
+
 	void updateButton(uint8_t buttonIndex, uint8_t buttonValue);
 	void updateHatSwitch(uint8_t HatSwitchIndex, uint8_t HatSwitchValue);
 	void updateAxis(uint8_t axisIndex, uint8_t axisValue);
+    void updateConditionValue(int16_t springCurPos, int16_t damperCurVel,int16_t inertiaCurAcc,int16_t frictionCurPos);
 	void updateForces(int32_t* forces);
-	
+
 private:
 
 	uint8_t* axisValues = NULL;
@@ -47,8 +49,8 @@ private:
     uint8_t* buttonValues = NULL;
 
 	uint8_t hidReportSize = 9; //2 * 8btns + (4btns+hat) + 6 * axis
-	uint8_t hidReportId = 1;
-	
+	uint8_t hidReportId = REPORT_ID;
+
 	void pushUpdate();
 };
 

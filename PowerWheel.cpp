@@ -11,7 +11,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this library. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -25,7 +25,7 @@ PowerWheel::PowerWheel()
 	buttonValues = new uint8_t[BUTTON_BYTE_COUNT];
 	axisValues = new uint8_t[AXIS_COUNT];
 	hatSwitchValues = new uint8_t[HATSWITCH_COUNT];
-	
+
 	for (uint8_t i = 0 ; i < AXIS_COUNT ; i++)
 	{
 		axisValues[i] = 0;
@@ -38,10 +38,12 @@ PowerWheel::PowerWheel()
 	{
 		hatSwitchValues[i] = 8;
 	}
-	
-	HIDSubDescriptor* node = new HIDSubDescriptor(hidReportDescriptor, HID_REPORT_DESCRIPTOR_SIZE, pidReportDescriptor, PID_REPORT_DESCRIPTOR_SIZE);
+
+	uint16_t hidReportDescriptorSize = sizeof(hidReportDescriptor) / sizeof(hidReportDescriptor[0]); //83
+	uint16_t pidReportDescriptorSize = sizeof(pidReportDescriptor) / sizeof(pidReportDescriptor[0]); //1227
+	HIDSubDescriptor* node = new HIDSubDescriptor(hidReportDescriptor, hidReportDescriptorSize, pidReportDescriptor, pidReportDescriptorSize);
 	HID().AppendDescriptor(node);
-	
+
 }
 
 
@@ -65,6 +67,14 @@ void PowerWheel::updateAxis(uint8_t axisIndex, uint8_t axisValue)
 	pushUpdate();
 }
 
+void PowerWheel::updateConditionValue(int16_t springCurPos, int16_t damperCurVel,int16_t inertiaCurAcc,int16_t frictionCurPos)
+{
+    HID().forceComputer.springCurPos = springCurPos;
+    HID().forceComputer.damperCurVel = damperCurVel;
+    HID().forceComputer.inertiaCurAcc = inertiaCurAcc;
+    HID().forceComputer.frictionCurPos = frictionCurPos;
+}
+
 
 void PowerWheel::updateForces(int32_t* forces)
 {
@@ -77,11 +87,11 @@ void PowerWheel::pushUpdate()
 {
 	uint8_t data[hidReportSize];
 	uint8_t index = 0;
-	
+
 	data[index++] = buttonValues[0];
 	data[index++] = buttonValues[1];
 	data[index++] = (hatSwitchValues[0] << 4) | (B00001111 & buttonValues[2]);
-	
+
 	for (uint8_t i = 0 ; i < AXIS_COUNT ; i++)
 	{
 		data[index++] = axisValues[i];
