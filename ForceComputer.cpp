@@ -56,7 +56,7 @@ uint8_t ForceComputer::getNextFreeEffect()
 	while (effectTable[nextFreeEffect].state != 0)
 	{
 		if (nextFreeEffect >= MAX_EFFECT_NUMBER)
-			return 0;
+			break;
 		nextFreeEffect++;
 	}
 
@@ -65,6 +65,7 @@ uint8_t ForceComputer::getNextFreeEffect()
 
 void ForceComputer::startEffect(uint8_t index)
 {
+	if (index > MAX_EFFECT_NUMBER) return;
 	effectTable[index].state = 0x02; //Effect playing
 	effectTable[index].elapsedTime = 0;
 	effectTable[index].startTime = (uint64_t) millis();
@@ -72,6 +73,7 @@ void ForceComputer::startEffect(uint8_t index)
 
 void ForceComputer::stopEffect(uint8_t index)
 {
+	if (index > MAX_EFFECT_NUMBER) return;
 	effectTable[index].state &= ~0x02; //Effect not playing
 	blockLoadReport.ramPoolAvailable += EFFECT_SIZE;
 }
@@ -84,6 +86,7 @@ void ForceComputer::stopAll()
 
 void ForceComputer::freeEffect(uint8_t index)
 {
+	if (index > MAX_EFFECT_NUMBER) return;
 	effectTable[index].state = 0;
 	if (index < nextFreeEffect)
 		nextFreeEffect = index; //Update nextFreeEffect
@@ -92,8 +95,7 @@ void ForceComputer::freeEffect(uint8_t index)
 void ForceComputer::freeAll(void)
 {
 	nextFreeEffect = 1;
-	for (uint8_t i = 0 ; i < MAX_EFFECT_NUMBER + 1 ; i++)
-		freeEffect(i);
+	memset((void*)& effectTable, 0, sizeof(effectTable));
 	blockLoadReport.ramPoolAvailable = MEMORY_SIZE;
 }
 

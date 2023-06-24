@@ -14,7 +14,7 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -62,11 +62,11 @@ int HID_::getDescriptor(USBSetup& setup)
 			return -1;
 		total += res;
 	}
-	
+
 	// Reset the protocol on reenumeration. Normally the host should not assume the state of the protocol
 	// due to the USB specs, but Windows and Linux just assumes its in report mode.
 	protocol = HID_REPORT_PROTOCOL;
-	
+
 	return total;
 }
 
@@ -115,7 +115,7 @@ void HID_::ReceiveReport()
 	}
 }
 
-void HID_::getReport(USBSetup& setup) 
+void HID_::getReport(USBSetup& setup)
 {
 	if (setup.wValueH == HID_REPORT_TYPE_FEATURE) //Report type, 1=INPUT / 2=OUTPUT / 3=FEATURE
 	{
@@ -130,7 +130,7 @@ void HID_::getReport(USBSetup& setup)
 			PoolReport_t poolReport;
 			poolReport.reportId = setup.wValueL;
 			poolReport.ramPoolSize = 0xffff;
-			poolReport.maxSimultaneousEffects = MAX_EFFECTS;
+			poolReport.maxSimultaneousEffects = MAX_EFFECT_NUMBER;
 			poolReport.memoryManagement = 3;
 			USB_SendControl(TRANSFER_RELEASE, &poolReport, sizeof(PoolReport_t));
 		}

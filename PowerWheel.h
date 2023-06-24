@@ -41,6 +41,7 @@ public:
 	void updateAxis(uint8_t axisIndex, uint8_t axisValue);
     void updateConditionValue(int16_t springCurPos, int16_t damperCurVel,int16_t inertiaCurAcc,int16_t frictionCurPos);
 	void updateForces(int32_t* forces);
+	void pushUpdate();
 
 private:
 
@@ -50,8 +51,7 @@ private:
 
 	uint8_t hidReportSize = 9; //2 * 8btns + (4btns+hat) + 6 * axis
 	uint8_t hidReportId = REPORT_ID;
-
-	void pushUpdate();
+	
 };
 
 #endif

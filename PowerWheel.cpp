@@ -50,22 +50,20 @@ PowerWheel::PowerWheel()
 void PowerWheel::updateButton(uint8_t buttonIndex, uint8_t buttonValue)
 {
 	bitWrite(buttonValues[buttonIndex / 8], buttonIndex % 8, buttonValue);
-	pushUpdate();
 }
 
 
 void PowerWheel::updateHatSwitch(uint8_t hatSwitchIndex, uint8_t hatSwitchValue)
 {
 	hatSwitchValues[hatSwitchIndex] = hatSwitchValue;
-	pushUpdate();
 }
 
 
 void PowerWheel::updateAxis(uint8_t axisIndex, uint8_t axisValue)
 {
 	axisValues[axisIndex] = axisValue;
-	pushUpdate();
 }
+
 
 void PowerWheel::updateConditionValue(int16_t springCurPos, int16_t damperCurVel,int16_t inertiaCurAcc,int16_t frictionCurPos)
 {
